@@ -1,0 +1,425 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -122.4194,
+                    37.7749
+                ]
+            },
+            "properties": {
+                "id": "proj-001",
+                "name": "San Francisco Tech Hub",
+                "type": "Commercial",
+                "subtype": "Office",
+                "status": "Completed",
+                "year": 2022,
+                "budget": 42500000,
+                "description": "A 15-story modern office building with sustainable design elements, collaborative workspaces, and retail on the ground floor.",
+                "client": "Bay Area Developments LLC",
+                "imageUrl": "https://images.pexels.com/photos/8321428/pexels-photo-8321428.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "123 Market Street, San Francisco, CA",
+                "highlights": [
+                    "LEED Platinum Certified",
+                    "Smart Building Technology",
+                    "Rooftop Garden"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -74.0060,
+                    40.7128
+                ]
+            },
+            "properties": {
+                "id": "proj-002",
+                "name": "Manhattan Residential Tower",
+                "type": "Residential",
+                "subtype": "Multi-Family",
+                "status": "In Progress",
+                "year": 2025,
+                "budget": 78000000,
+                "description": "A 35-story luxury residential tower with 150 units, amenity spaces including a pool, fitness center, and rooftop lounge.",
+                "client": "East Coast Housing Inc.",
+                "imageUrl": "https://images.pexels.com/photos/31154959/pexels-photo-31154959/free-photo-of-modern-brick-residential-building-in-dusseldorf.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "456 West 42nd Street, New York, NY",
+                "highlights": [
+                    "Smart Home Integration",
+                    "Energy Efficient Systems",
+                    "24/7 Concierge"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -87.6298,
+                    41.8781
+                ]
+            },
+            "properties": {
+                "id": "proj-003",
+                "name": "Chicago Transit Hub",
+                "type": "Transportation",
+                "subtype": "Transit",
+                "status": "Completed",
+                "year": 2021,
+                "budget": 32000000,
+                "description": "A modern transit center connecting multiple train lines, bus routes, and providing cyclist amenities in downtown Chicago.",
+                "client": "Chicago Transit Authority",
+                "imageUrl": "https://images.pexels.com/photos/2260838/pexels-photo-2260838.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "500 N Michigan Avenue, Chicago, IL",
+                "highlights": [
+                    "Multi-Modal Integration",
+                    "Digital Information Systems",
+                    "Public Art Installations"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -84.3880,
+                    33.7490
+                ]
+            },
+            "properties": {
+                "id": "proj-004",
+                "name": "Atlanta Mixed-Use Development",
+                "type": "Commercial",
+                "subtype": "Mixed-Use",
+                "status": "Completed",
+                "year": 2023,
+                "budget": 65000000,
+                "description": "A vibrant mixed-use development with retail, restaurants, offices, and residential apartments in the heart of Atlanta.",
+                "client": "Southern Development Group",
+                "imageUrl": "https://images.pexels.com/photos/2435296/pexels-photo-2435296.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "789 Peachtree Street, Atlanta, GA",
+                "highlights": [
+                    "Walkable Community Design",
+                    "Indoor/Outdoor Spaces",
+                    "Locally-Sourced Materials"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -118.2437,
+                    34.0522
+                ]
+            },
+            "properties": {
+                "id": "proj-005",
+                "name": "Los Angeles Creative Campus",
+                "type": "Commercial",
+                "subtype": "Campus",
+                "status": "In Progress",
+                "year": 2024,
+                "budget": 85000000,
+                "description": "A creative office campus designed for media and technology companies with production facilities, collaborative spaces, and amenities.",
+                "client": "West Coast Ventures",
+                "imageUrl": "https://images.pexels.com/photos/31156623/pexels-photo-31156623/free-photo-of-classic-architecture-at-marquette-university-campus.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "1500 Sunset Boulevard, Los Angeles, CA",
+                "highlights": [
+                    "Production Studios",
+                    "Outdoor Workspaces",
+                    "Sustainable Design"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -95.3698,
+                    29.7604
+                ]
+            },
+            "properties": {
+                "id": "proj-006",
+                "name": "Houston Medical Center",
+                "type": "Commercial",
+                "subtype": "Healthcare",
+                "status": "Completed",
+                "year": 2021,
+                "budget": 104000000,
+                "description": "A state-of-the-art medical center with specialized treatment facilities, research labs, and patient-centered design.",
+                "client": "Texas Healthcare Systems",
+                "imageUrl": "https://images.pexels.com/photos/18462224/pexels-photo-18462224/free-photo-of-a-highway-in-a-city.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "300 Medical Center Blvd, Houston, TX",
+                "highlights": [
+                    "Advanced Research Facilities",
+                    "Healing Garden",
+                    "Modular Construction"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0369,
+                    38.9072
+                ]
+            },
+            "properties": {
+                "id": "proj-007",
+                "name": "Washington DC Government Complex",
+                "type": "Commercial",
+                "subtype": "Government",
+                "status": "Planned",
+                "year": 2026,
+                "budget": 125000000,
+                "description": "A modern government office complex with secure facilities, sustainable design, and public-facing services in the heart of DC.",
+                "client": "Federal Facilities Administration",
+                "imageUrl": "https://images.pexels.com/photos/1575093/pexels-photo-1575093.png?auto=compress&cs=tinysrgb&w=1200",
+                "address": "1200 Constitution Ave, Washington, DC",
+                "highlights": [
+                    "Security Integration",
+                    "Net-Zero Energy Design",
+                    "Public Plaza"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -111.8910,
+                    40.7608
+                ]
+            },
+            "properties": {
+                "id": "proj-008",
+                "name": "Salt Lake City Residential Community",
+                "type": "Residential",
+                "subtype": "Community",
+                "status": "In Progress",
+                "year": 2024,
+                "budget": 55000000,
+                "description": "A sustainable residential community with single-family homes, townhouses, and community facilities designed for active lifestyles.",
+                "client": "Mountain West Developers",
+                "imageUrl": "https://images.pexels.com/photos/1642125/pexels-photo-1642125.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "450 Foothill Drive, Salt Lake City, UT",
+                "highlights": [
+                    "Net-Zero Ready Homes",
+                    "Community Center",
+                    "Mountain Views"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -122.6784,
+                    45.5152
+                ]
+            },
+            "properties": {
+                "id": "proj-009",
+                "name": "Portland Eco-Industrial Park",
+                "type": "Industrial",
+                "subtype": "Manufacturing",
+                "status": "Completed",
+                "year": 2022,
+                "budget": 48000000,
+                "description": "An eco-industrial park designed for sustainable manufacturing with shared resources, renewable energy, and efficient logistics.",
+                "client": "Pacific Northwest Industries",
+                "imageUrl": "https://images.pexels.com/photos/9716236/pexels-photo-9716236.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "2000 Industrial Way, Portland, OR",
+                "highlights": [
+                    "Renewable Energy Systems",
+                    "Water Recycling",
+                    "Shared Resources"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -86.7816,
+                    36.1627
+                ]
+            },
+            "properties": {
+                "id": "proj-010",
+                "name": "Nashville Music Venue",
+                "type": "Commercial",
+                "subtype": "Entertainment",
+                "status": "Completed",
+                "year": 2023,
+                "budget": 28000000,
+                "description": "A state-of-the-art music venue with superior acoustics, flexible seating arrangements, and modern amenities in the heart of Music City.",
+                "client": "Tennessee Entertainment Group",
+                "imageUrl": "https://images.pexels.com/photos/21918414/pexels-photo-21918414/free-photo-of-crowd-at-concert-at-dusk.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "123 Music Row, Nashville, TN",
+                "highlights": [
+                    "Acoustic Excellence",
+                    "Flexible Staging",
+                    "Historic Facade Integration"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -80.1918,
+                    25.7617
+                ]
+            },
+            "properties": {
+                "id": "proj-011",
+                "name": "Miami Beachfront Hotel",
+                "type": "Commercial",
+                "subtype": "Hospitality",
+                "status": "In Progress",
+                "year": 2025,
+                "budget": 92000000,
+                "description": "A luxury beachfront hotel with 250 rooms, multiple restaurants, spa facilities, and direct beach access in Miami's vibrant South Beach.",
+                "client": "Coastal Hospitality Group",
+                "imageUrl": "https://images.pexels.com/photos/9400874/pexels-photo-9400874.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "500 Ocean Drive, Miami Beach, FL",
+                "highlights": [
+                    "Oceanfront Infinity Pool",
+                    "Sustainable Operations",
+                    "Locally-Inspired Design"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -104.9903,
+                    39.7392
+                ]
+            },
+            "properties": {
+                "id": "proj-012",
+                "name": "Denver Mountain Highway",
+                "type": "Transportation",
+                "subtype": "Highway",
+                "status": "Planned",
+                "year": 2027,
+                "budget": 145000000,
+                "description": "A major highway expansion project improving connectivity between Denver and mountain communities with enhanced safety features and wildlife crossings.",
+                "client": "Colorado Department of Transportation",
+                "imageUrl": "https://images.pexels.com/photos/1624600/pexels-photo-1624600.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "I-70 Mountain Corridor, Denver, CO",
+                "highlights": [
+                    "Wildlife Crossings",
+                    "Weather Monitoring Systems",
+                    "Improved Safety Design"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -71.0589,
+                    42.3601
+                ]
+            },
+            "properties": {
+                "id": "proj-013",
+                "name": "Boston Historic Renovation",
+                "type": "Residential",
+                "subtype": "Renovation",
+                "status": "Completed",
+                "year": 2021,
+                "budget": 38000000,
+                "description": "Careful renovation of a historic Boston building, converting it to luxury condominiums while preserving architectural heritage.",
+                "client": "New England Heritage Properties",
+                "imageUrl": "https://images.pexels.com/photos/3075532/pexels-photo-3075532.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "75 Beacon Street, Boston, MA",
+                "highlights": [
+                    "Historic Preservation",
+                    "Modern Amenities",
+                    "Energy Retrofits"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -94.5786,
+                    39.0997
+                ]
+            },
+            "properties": {
+                "id": "proj-014",
+                "name": "Kansas City Sports Complex",
+                "type": "Commercial",
+                "subtype": "Sports",
+                "status": "In Progress",
+                "year": 2024,
+                "budget": 115000000,
+                "description": "A multi-sport complex with professional and community facilities, including stadiums, training centers, and public recreation spaces.",
+                "client": "Midwest Sports Authority",
+                "imageUrl": "https://images.pexels.com/photos/12302385/pexels-photo-12302385.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                "address": "800 Stadium Way, Kansas City, MO",
+                "highlights": [
+                    "Multi-Use Fields",
+                    "Community Access",
+                    "Indoor Training Facility"
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -112.0740,
+                    33.4484
+                ]
+            },
+            "properties": {
+                "id": "proj-015",
+                "name": "Phoenix Solar Power Plant",
+                "type": "Industrial",
+                "subtype": "Energy",
+                "status": "Completed",
+                "year": 2022,
+                "budget": 68000000,
+                "description": "A large-scale solar power generation facility utilizing the abundant Arizona sunshine with advanced tracking systems and storage capabilities.",
+                "client": "Southwest Energy Corporation",
+                "imageUrl": "https://images.pexels.com/photos/2800845/pexels-photo-2800845.jpeg",
+                "address": "Desert View Road, Phoenix, AZ",
+                "highlights": [
+                    "500MW Capacity",
+                    "Battery Storage",
+                    "Minimal Water Usage"
+                ]
+            }
+        }
+    ]
+}
