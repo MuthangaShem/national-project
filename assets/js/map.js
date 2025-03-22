@@ -1,6 +1,10 @@
-import { config } from './config.js';
-
+// map.js - Map initialization and control
 class ProjectMap {
+    /**
+     * Initialize the map and its components
+     * @param {string} containerId - The ID of the HTML element to contain the map
+     * @param {Object} options - Configuration options for the map
+     */
     constructor(containerId, options = {}) {
         this.containerId = containerId;
         this.options = Object.assign({
@@ -20,8 +24,17 @@ class ProjectMap {
         this.initMap();
     }
 
+    /**
+     * Initialize the Mapbox map
+     */
     initMap() {
-        mapboxgl.accessToken = ''; // Replace with your token
+        // Import access token from config.js
+        try {
+            mapboxgl.accessToken = config.mapboxAccessToken;
+        } catch (e) {
+            console.error('Error accessing mapbox access token. Make sure config.js is set up correctly.');
+            return;
+        }
 
         this.map = new mapboxgl.Map({
             container: this.containerId,
@@ -29,8 +42,7 @@ class ProjectMap {
             center: this.options.initialCenter,
             zoom: this.options.initialZoom,
             minZoom: this.options.minZoom,
-            maxZoom: this.options.maxZoom,
-            accessToken: config.mapboxAccessToken // Use the API key from config
+            maxZoom: this.options.maxZoom
         });
 
         // Add navigation controls
@@ -51,8 +63,14 @@ class ProjectMap {
         this.map.on('load', () => {
             this.onMapLoaded();
         });
+
+        // Make map instance globally available
+        window.mapInstance = this.map;
     }
 
+    /**
+     * Handle map loaded event
+     */
     onMapLoaded() {
         // Load project data
         this.loadProjectData();
@@ -61,11 +79,17 @@ class ProjectMap {
         this.addEventListeners();
     }
 
+    /**
+     * Load project data from GeoJSON file
+     */
     loadProjectData() {
         fetch('assets/data/projects.geojson')
             .then(response => response.json())
             .then(data => {
                 this.projectData = data;
+
+                // Make data globally available
+                window.projectData = data;
 
                 if (this.options.clusterMarkers) {
                     this.addClusteredMarkers();
@@ -74,16 +98,30 @@ class ProjectMap {
                 }
 
                 // Initialize filters
-                this.filters = new ProjectFilters(this.map, this.projectData);
+                if (typeof ProjectFilters === 'function') {
+                    this.filters = new ProjectFilters(this.map, this.projectData);
+                    window.projectFilters = this.filters;
+                }
+
+                // Initialize details panel if available
+                if (typeof initDetailsPanel === 'function') {
+                    initDetailsPanel(this.projectData, this.map);
+                }
 
                 // Check URL for direct project link
                 this.checkUrlForProjectId();
             })
             .catch(error => {
                 console.error('Error loading project data:', error);
+                if (window.showToast) {
+                    window.showToast('Failed to load project data. Please try again later.');
+                }
             });
     }
 
+    /**
+     * Add clustered markers to the map
+     */
     addClusteredMarkers() {
         // Add source for clustered markers
         this.map.addSource('projects', {
@@ -157,6 +195,14 @@ class ProjectMap {
             }
         });
 
+        // Add event handlers for clusters and markers
+        this.addClusterHandlers();
+    }
+
+    /**
+     * Add event handlers for cluster and marker interactions
+     */
+    addClusterHandlers() {
         // Handle cluster click
         this.map.on('click', 'clusters', (e) => {
             const features = this.map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
@@ -177,8 +223,10 @@ class ProjectMap {
             const coordinates = e.features[0].geometry.coordinates.slice();
             const properties = e.features[0].properties;
 
-            // Create popup HTML
-            const popupHTML = createCustomPopupHTML(properties);
+            // Create popup content using the popup function if available
+            const popupContent = typeof createCustomPopupHTML === 'function' ?
+                createCustomPopupHTML(properties) :
+                `<div><h3>${properties.name}</h3><p>${properties.description || ''}</p></div>`;
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -189,7 +237,7 @@ class ProjectMap {
 
             new mapboxgl.Popup()
                 .setLngLat(coordinates)
-                .setHTML(popupHTML)
+                .setHTML(popupContent)
                 .addTo(this.map);
         });
 
@@ -211,22 +259,41 @@ class ProjectMap {
         });
     }
 
+    /**
+     * Add individual markers for each project
+     */
     addIndividualMarkers() {
+        if (!this.projectData || !this.projectData.features) return;
+
         this.projectData.features.forEach(feature => {
-            // Create custom marker
-            const marker = createCustomMarker(feature);
+            // Create marker if function is available
+            if (typeof createCustomMarker === 'function') {
+                const marker = createCustomMarker(feature);
 
-            // Add popup
-            marker.setPopup(createCustomPopup(feature));
+                // Add popup if function is available
+                if (typeof createCustomPopup === 'function') {
+                    marker.setPopup(createCustomPopup(feature));
+                }
 
-            // Add to map
-            marker.addTo(this.map);
+                // Add to map
+                marker.addTo(this.map);
 
-            // Save reference to marker
-            this.markers.push(marker);
+                // Save reference to marker
+                this.markers.push(marker);
+            } else {
+                // Fallback to basic marker
+                const marker = new mapboxgl.Marker()
+                    .setLngLat(feature.geometry.coordinates)
+                    .addTo(this.map);
+
+                this.markers.push(marker);
+            }
         });
     }
 
+    /**
+     * Add general event listeners to the map
+     */
     addEventListeners() {
         // Example: Add resize handler
         window.addEventListener('resize', () => {
@@ -234,6 +301,10 @@ class ProjectMap {
         });
     }
 
+    /**
+     * Fly to a specific project on the map
+     * @param {string} projectId - ID of the project to fly to
+     */
     flyToProject(projectId) {
         const feature = this.projectData.features.find(f =>
             f.properties.id === projectId
@@ -248,14 +319,19 @@ class ProjectMap {
 
             // Create and open popup
             setTimeout(() => {
-                new mapboxgl.Popup()
-                    .setLngLat(feature.geometry.coordinates)
-                    .setHTML(createCustomPopupHTML(feature.properties))
-                    .addTo(this.map);
+                if (typeof createCustomPopupHTML === 'function') {
+                    new mapboxgl.Popup()
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(createCustomPopupHTML(feature.properties))
+                        .addTo(this.map);
+                }
             }, this.options.flyToDuration);
         }
     }
 
+    /**
+     * Fit the map view to show all projects
+     */
     fitAllProjects() {
         if (!this.projectData || !this.projectData.features.length) return;
 
@@ -273,6 +349,9 @@ class ProjectMap {
         });
     }
 
+    /**
+     * Check URL for project ID parameter and fly to that project
+     */
     checkUrlForProjectId() {
         // Check URL parameters for project ID
         const urlParams = new URLSearchParams(window.location.search);
@@ -280,11 +359,34 @@ class ProjectMap {
 
         if (projectId) {
             setTimeout(() => {
-                this.flyToProject(projectId);
+                // If showProjectDetails is available, use it
+                if (window.showProjectDetails) {
+                    window.showProjectDetails(projectId, true);
+                } else {
+                    // Otherwise just fly to the project
+                    this.flyToProject(projectId);
+                }
             }, 1000);
         } else {
             // If no specific project, fit to all projects
             this.fitAllProjects();
         }
     }
+
+    /**
+     * Remove all markers from the map
+     */
+    removeAllMarkers() {
+        if (this.markers && this.markers.length) {
+            this.markers.forEach(marker => {
+                if (marker) marker.remove();
+            });
+        }
+        this.markers = [];
+    }
+}
+
+// Export the class if using modules
+if (typeof module !== 'undefined') {
+    module.exports = { ProjectMap };
 }

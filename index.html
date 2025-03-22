@@ -115,11 +115,11 @@
               <div class="filter-slider">
                 <div class="range-labels">
                   <span>2020</span>
+                  <span id="year-value">2025</span>
                   <span>2025</span>
                 </div>
                 <input type="range" id="year-range" min="2020" max="2025"
-                  step="1" value="2022" class="range-slider">
-                <output for="year-range" id="year-value">2022</output>
+                  step="1" value="2025" class="range-slider">
               </div>
             </div>
 
@@ -220,6 +220,13 @@
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
 
     <!-- Custom Scripts -->
+    <!-- Configuration must be loaded first -->
+    <script src="config.js"></script>
+
+    <!-- Then all other scripts -->
+    <script
+      src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <script src="assets/js/markers.js"></script>
     <script src="assets/js/popup.js"></script>
     <script src="assets/js/filters.js"></script>

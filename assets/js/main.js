@@ -1,6 +1,20 @@
 // main.js - Main application initialization
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if config.js is loaded
+    if (typeof config === 'undefined' || !config.mapboxAccessToken) {
+        console.error('Mapbox access token not found. Please check config.js is properly set up.');
+        showError('Configuration error. Please contact the administrator.');
+        return;
+    }
+
     // Initialize the map
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer) {
+        console.error('Map container not found');
+        return;
+    }
+
+    // Create the map instance using the ProjectMap class
     const projectMap = new ProjectMap('map', {
         initialCenter: [-98.5795, 39.8283], // US center
         initialZoom: 3.5,
@@ -13,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper function to show toast notifications
     window.showToast = function (message, duration = 3000) {
         const toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) return;
+
         const toast = document.createElement('div');
         toast.className = 'toast';
         toast.textContent = message;
@@ -26,90 +42,78 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Remove from DOM after animation
             setTimeout(() => {
-                toastContainer.removeChild(toast);
+                if (toastContainer.contains(toast)) {
+                    toastContainer.removeChild(toast);
+                }
             }, 300);
         }, duration);
     };
 
-    // Function to generate details panel HTML
-    window.generateDetailsPanelHTML = function (project) {
-        const props = project.properties;
-
-        // Format budget as currency
-        const formattedBudget = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 0
-        }).format(props.budget);
-
-        // Create highlights HTML if available
-        let highlightsHTML = '';
-        if (props.highlights && props.highlights.length) {
-            highlightsHTML = `
-        <div class="details-section">
-          <h3>Project Highlights</h3>
-          <ul>
-            ${props.highlights.map(item => `<li>${item}</li>`).join('')}
-          </ul>
-        </div>
-      `;
-        }
-
-        return `
-      <div class="details-header" style="background-image: url('${props.imageUrl || 'assets/images/placeholder.jpg'}')">
-        <button class="close-details">&times;</button>
-        <div class="details-header-content">
-          <h2>${props.name}</h2>
-          <div class="project-meta">
-            <span class="project-type">${props.type}</span>
-            <span class="project-year">${props.year}</span>
-            <span class="project-status status-${props.status.toLowerCase()}">${props.status}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="details-body">
-        <div class="details-section">
-          <h3>Overview</h3>
-          <p>${props.description}</p>
-        </div>
-
-        <div class="details-section">
-          <h3>Project Details</h3>
-          <p><strong>Location:</strong> ${props.address}</p>
-          <p><strong>Client:</strong> ${props.client}</p>
-          <p><strong>Budget:</strong> ${formattedBudget}</p>
-          <p><strong>Completion:</strong> ${props.status === 'Completed' ? `${props.year}` : 'In Progress'}</p>
-        </div>
-
-        ${highlightsHTML}
-
-        <div class="details-section">
-          <h3>Gallery</h3>
-          <div class="details-gallery">
-            <div class="gallery-item">
-              <img src="${props.imageUrl || 'assets/images/placeholder.jpg'}" alt="${props.name}">
-            </div>
-            <div class="gallery-item">
-              <img src="assets/images/placeholder.jpg" alt="Project image">
-            </div>
-            <div class="gallery-item">
-              <img src="assets/images/placeholder.jpg" alt="Project image">
-            </div>
-            <div class="gallery-item">
-              <img src="assets/images/placeholder.jpg" alt="Project image">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="details-footer">
-        <button class="btn btn-primary close-panel">Close</button>
-        <button class="btn-text btn-share" data-project-id="${props.id}">Share Project</button>
+    // Helper function to show errors
+    function showError(message) {
+        const errorElement = document.createElement('div');
+        errorElement.className = 'error-message';
+        errorElement.innerHTML = `
+      <div class="error-content">
+        <h3>Error</h3>
+        <p>${message}</p>
       </div>
     `;
+        document.body.appendChild(errorElement);
+    }
+
+    // Animate a marker by project ID
+    window.animateMarker = function (projectId) {
+        if (!window.projectData || !window.mapInstance) return;
+
+        // Find the project
+        const project = window.projectData.features.find(f => f.properties.id === projectId);
+        if (!project) return;
+
+        // Create a pulsing dot at the project location
+        const el = document.createElement('div');
+        el.className = 'marker-highlight';
+
+        // Add the temporary marker
+        const marker = new mapboxgl.Marker({
+            element: el,
+            anchor: 'center'
+        })
+            .setLngLat(project.geometry.coordinates)
+            .addTo(window.mapInstance);
+
+        // Remove the marker after animation completes
+        setTimeout(() => {
+            marker.remove();
+        }, 3000);
     };
 });
+
+// Adjust UI elements based on screen size
+function adjustUIForScreenSize() {
+    const isMobile = window.innerWidth <= 768;
+    const sidebar = document.querySelector('.sidebar');
+
+    if (sidebar) {
+        // On mobile, sidebar should be hidden by default
+        if (isMobile) {
+            sidebar.classList.remove('active');
+        } else {
+            // On desktop, sidebar should be visible by default
+            sidebar.classList.add('active');
+        }
+    }
+
+    // Adjust map controls position based on screen size
+    if (window.mapInstance) {
+        // Example: adjust map padding to account for sidebar
+        if (!isMobile) {
+            window.mapInstance.setPadding({ left: 320, top: 0, right: 0, bottom: 0 });
+        } else {
+            window.mapInstance.setPadding({ left: 0, top: 0, right: 0, bottom: 0 });
+        }
+    }
+}
 
 // Initialize UI event listeners
 function initializeUI() {
@@ -136,7 +140,12 @@ function initializeUI() {
             // Reset year range slider
             const yearSlider = document.getElementById('year-range');
             if (yearSlider) {
-                yearSlider.value = `${yearSlider.min},${yearSlider.max}`;
+                yearSlider.value = yearSlider.max;
+
+                const yearValue = document.getElementById('year-value');
+                if (yearValue) {
+                    yearValue.textContent = yearSlider.value;
+                }
             }
 
             // Clear search input
@@ -152,12 +161,13 @@ function initializeUI() {
         });
     }
 
-    // Close details panel
+    // Handle marker click events - delegate to document since markers may be dynamically added
     document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('close-details') || e.target.classList.contains('close-panel')) {
-            const detailsPanel = document.getElementById('project-details-panel');
-            if (detailsPanel) {
-                detailsPanel.classList.remove('active');
+        // Check if the click was on a marker popup button
+        if (e.target.closest('.popup-actions .btn-details')) {
+            const projectId = e.target.closest('.btn-details').getAttribute('data-project-id');
+            if (projectId && window.showProjectDetails) {
+                window.showProjectDetails(projectId);
             }
         }
     });
@@ -196,4 +206,38 @@ function initializeUI() {
             yearValue.textContent = yearSlider.value;
         });
     }
+
+    // Initialize keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        // ESC key to close any open panels/modals
+        if (e.key === 'Escape') {
+            // Close details panel if open
+            if (window.detailsPanel && window.detailsPanel.isOpen) {
+                window.detailsPanel.closePanel();
+                return;
+            }
+
+            // Close about modal if open
+            const aboutModal = document.getElementById('about-modal');
+            if (aboutModal && aboutModal.classList.contains('active')) {
+                aboutModal.classList.remove('active');
+                return;
+            }
+
+            // Close sidebar on mobile if open
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar && window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        }
+    });
+
+    // Handle window resize events
+    window.addEventListener('resize', () => {
+        // Adjust UI elements based on screen size
+        adjustUIForScreenSize();
+    });
+
+    // Initial UI adjustment based on screen size
+    adjustUIForScreenSize();
 }
