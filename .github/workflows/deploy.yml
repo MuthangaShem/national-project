@@ -6,9 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -17,25 +15,13 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-
-      - name: Create deployment directory
+      - name: Create config file 🔧
         run: |
-          # Create a temporary deployment directory
-          mkdir -p _site
-          # Copy all files to the deployment directory
-          cp -r * _site/ || true
-          # Create the config.js file directly in the deployment directory
-          echo "const config = { mapboxAccessToken: '${{ secrets.MAPBOX_ACCESS_TOKEN }}' };" > _site/config.js
-          # Create .nojekyll file to disable Jekyll processing
-          touch _site/.nojekyll
+          echo "const config = { mapboxAccessToken: '${{ secrets.MAPBOX_ACCESS_TOKEN }}' };" > config.js
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: "_site"
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+          folder: . # The folder the action should deploy
+          branch: gh-pages # The branch the action will deploy to
+          clean: true # Automatically remove deleted files
