@@ -1,4 +1,4 @@
-// main.js - Main application initialization
+// Main application initialization
 document.addEventListener('DOMContentLoaded', () => {
     // Check if config.js is loaded
     if (typeof config === 'undefined' || !config.mapboxAccessToken) {
