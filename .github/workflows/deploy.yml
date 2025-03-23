@@ -1,21 +1,24 @@
 name: Deploy to GitHub Pages
+
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches: [main] # Or your default branch name (could be 'master')
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Create config file
+      - name: Create config file 🔧
         run: |
           echo "const config = { mapboxAccessToken: '${{ secrets.MAPBOX_ACCESS_TOKEN }}' };" > config.js
 
-      - name: Deploy
+      - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: .
+          branch: gh-pages # The branch the action should deploy to
+          folder: . # The folder the action should deploy
+          clean: true # Automatically remove deleted files
