@@ -7,7 +7,7 @@ const config = {
     mapboxAccessToken: 'YOUR_MAPBOX_ACCESS_TOKEN_HERE',
 
     // Other configuration options
-    appName: 'National Project Portfolio Showcase Map',
+    appName: 'National Project Showcase Map',
     appVersion: '1.0.0',
 
     // API endpoints (if needed)
