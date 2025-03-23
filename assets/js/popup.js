@@ -31,11 +31,11 @@ function createCustomPopupHTML(properties) {
     <div class="custom-popup">
       <div class="popup-header ${properties.type ? properties.type.toLowerCase() : 'default'}">
         <h3>${properties.name || 'Unnamed Project'}</h3>
-        <span class="popup-badge status-${properties.status ? properties.status.toLowerCase().replace(/\s+/g, '-') : 'unknown'}">${properties.status || 'Unknown'}</span>
       </div>
 
       ${properties.imageUrl ?
             `<div class="popup-image">
+             <span class="popup-badge status-${properties.status ? properties.status.toLowerCase().replace(/\s+/g, '-') : 'unknown'}">${properties.status || 'Unknown'}</span>
           <img src="${properties.imageUrl}" alt="${properties.name || 'Project image'}">
         </div>` : ''}
 
@@ -50,8 +50,8 @@ function createCustomPopupHTML(properties) {
         ${highlightsHTML}
 
         <div class="popup-actions">
-          <button class="btn-details" data-project-id="${properties.id || ''}">View Details</button>
-          <button class="btn-share" data-project-id="${properties.id || ''}">Share</button>
+          <button class="btn btn-details" data-project-id="${properties.id || ''}">View Details</button>
+          <button class="btn btn-share" data-project-id="${properties.id || ''}">Share</button>
         </div>
       </div>
     </div>

@@ -5,183 +5,183 @@
  * Manages opening, closing, and populating the project details panel
  */
 class DetailsPanel {
-    /**
-     * Initialize the details panel
-     * @param {string} panelId - The ID of the panel element
-     * @param {object} projectData - The project data object containing all projects
-     * @param {object} mapInstance - Reference to the map instance for flyTo functionality
-     */
-    constructor(panelId = 'project-details-panel', projectData = null, mapInstance = null) {
-        this.panelId = panelId;
-        this.panel = document.getElementById(panelId);
-        this.projectData = projectData;
-        this.map = mapInstance;
-        this.currentProject = null;
-        this.isOpen = false;
+  /**
+   * Initialize the details panel
+   * @param {string} panelId - The ID of the panel element
+   * @param {object} projectData - The project data object containing all projects
+   * @param {object} mapInstance - Reference to the map instance for flyTo functionality
+   */
+  constructor(panelId = 'project-details-panel', projectData = null, mapInstance = null) {
+    this.panelId = panelId;
+    this.panel = document.getElementById(panelId);
+    this.projectData = projectData;
+    this.map = mapInstance;
+    this.currentProject = null;
+    this.isOpen = false;
 
-        // Create overlay if it doesn't exist
-        this.createOverlay();
+    // Create overlay if it doesn't exist
+    this.createOverlay();
 
-        // Initialize event listeners
-        this.initEventListeners();
+    // Initialize event listeners
+    this.initEventListeners();
+  }
+
+  /**
+   * Create the background overlay element
+   */
+  createOverlay() {
+    if (!document.querySelector('.app-overlay')) {
+      const overlay = document.createElement('div');
+      overlay.className = 'app-overlay';
+      document.body.appendChild(overlay);
+
+      // Add click event to close panel when clicking outside
+      overlay.addEventListener('click', () => {
+        this.closePanel();
+      });
+
+      this.overlay = overlay;
+    } else {
+      this.overlay = document.querySelector('.app-overlay');
     }
+  }
 
-    /**
-     * Create the background overlay element
-     */
-    createOverlay() {
-        if (!document.querySelector('.app-overlay')) {
-            const overlay = document.createElement('div');
-            overlay.className = 'app-overlay';
-            document.body.appendChild(overlay);
-
-            // Add click event to close panel when clicking outside
-            overlay.addEventListener('click', () => {
-                this.closePanel();
-            });
-
-            this.overlay = overlay;
-        } else {
-            this.overlay = document.querySelector('.app-overlay');
-        }
-    }
-
-    /**
-     * Initialize event listeners for the panel
-     */
-    initEventListeners() {
-        // Handle clicks inside the panel
-        if (this.panel) {
-            this.panel.addEventListener('click', (e) => {
-                // Close button
-                if (e.target.closest('.details-close') || e.target.closest('.btn-close-panel')) {
-                    e.preventDefault();
-                    this.closePanel();
-                }
-
-                // Share button
-                if (e.target.closest('.btn-share-project')) {
-                    e.preventDefault();
-                    this.shareProject();
-                }
-
-                // Locate on map button
-                if (e.target.closest('.btn-locate-project')) {
-                    e.preventDefault();
-                    this.locateOnMap();
-                }
-            });
-
-            // Handle keyboard events
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && this.isOpen) {
-                    this.closePanel();
-                }
-            });
-        }
-    }
-
-    /**
-     * Open the details panel and display project information
-     * @param {string} projectId - The ID of the project to display
-     * @param {boolean} flyToMarker - Whether to fly to the marker on the map
-     */
-    openPanel(projectId, flyToMarker = false) {
-        // Find the project in the project data
-        const project = this.findProject(projectId);
-
-        if (!project) {
-            console.error(`Project with ID ${projectId} not found`);
-            return;
+  /**
+   * Initialize event listeners for the panel
+   */
+  initEventListeners() {
+    // Handle clicks inside the panel
+    if (this.panel) {
+      this.panel.addEventListener('click', (e) => {
+        // Close button
+        if (e.target.closest('.details-close') || e.target.closest('.btn-close-panel')) {
+          e.preventDefault();
+          this.closePanel();
         }
 
-        // Store current project
-        this.currentProject = project;
-
-        // Create panel content
-        this.populatePanel(project);
-
-        // Show the panel
-        this.panel.classList.add('active');
-        this.overlay.classList.add('active');
-        this.isOpen = true;
-
-        // Prevent background scrolling
-        document.body.style.overflow = 'hidden';
-
-        // Fly to marker if requested
-        if (flyToMarker && this.map) {
-            this.map.flyTo({
-                center: project.geometry.coordinates,
-                zoom: 15,
-                duration: 1000
-            });
+        // Share button
+        if (e.target.closest('.btn-share-project')) {
+          e.preventDefault();
+          this.shareProject();
         }
 
-        // Dispatch custom event
-        window.dispatchEvent(new CustomEvent('panel:opened', {
-            detail: { projectId }
-        }));
-    }
-
-    /**
-     * Close the details panel
-     */
-    closePanel() {
-        this.panel.classList.remove('active');
-        this.overlay.classList.remove('active');
-        this.isOpen = false;
-
-        // Restore scrolling
-        document.body.style.overflow = '';
-
-        // Dispatch custom event
-        window.dispatchEvent(new CustomEvent('panel:closed'));
-
-        // Clear content after animation completes
-        setTimeout(() => {
-            if (!this.isOpen) {
-                this.panel.innerHTML = '';
-            }
-        }, 300);
-    }
-
-    /**
-     * Find a project by its ID
-     * @param {string} projectId - The ID of the project to find
-     * @returns {object|null} - The project object or null if not found
-     */
-    findProject(projectId) {
-        if (!this.projectData || !this.projectData.features) {
-            console.error('Project data not loaded');
-            return null;
+        // Locate on map button
+        if (e.target.closest('.btn-locate-project')) {
+          e.preventDefault();
+          this.locateOnMap();
         }
+      });
 
-        return this.projectData.features.find(
-            feature => feature.properties.id === projectId
-        );
+      // Handle keyboard events
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.isOpen) {
+          this.closePanel();
+        }
+      });
+    }
+  }
+
+  /**
+   * Open the details panel and display project information
+   * @param {string} projectId - The ID of the project to display
+   * @param {boolean} flyToMarker - Whether to fly to the marker on the map
+   */
+  openPanel(projectId, flyToMarker = false) {
+    // Find the project in the project data
+    const project = this.findProject(projectId);
+
+    if (!project) {
+      console.error(`Project with ID ${projectId} not found`);
+      return;
     }
 
-    /**
-     * Populate the panel with project information
-     * @param {object} project - The project object to display
-     */
-    populatePanel(project) {
-        const props = project.properties;
+    // Store current project
+    this.currentProject = project;
 
-        // Format the budget as currency
-        const formattedBudget = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 0
-        }).format(props.budget);
+    // Create panel content
+    this.populatePanel(project);
 
-        // Format type and status classes for CSS
-        const typeClass = `type-${props.type.toLowerCase()}`;
-        const statusClass = `status-${props.status.toLowerCase().replace(/\s+/g, '-')}`;
+    // Show the panel
+    this.panel.classList.add('active');
+    this.overlay.classList.add('active');
+    this.isOpen = true;
 
-        // Create the HTML content
-        const html = `
+    // Prevent background scrolling
+    document.body.style.overflow = 'hidden';
+
+    // Fly to marker if requested
+    if (flyToMarker && this.map) {
+      this.map.flyTo({
+        center: project.geometry.coordinates,
+        zoom: 15,
+        duration: 1000
+      });
+    }
+
+    // Dispatch custom event
+    window.dispatchEvent(new CustomEvent('panel:opened', {
+      detail: { projectId }
+    }));
+  }
+
+  /**
+   * Close the details panel
+   */
+  closePanel() {
+    this.panel.classList.remove('active');
+    this.overlay.classList.remove('active');
+    this.isOpen = false;
+
+    // Restore scrolling
+    document.body.style.overflow = '';
+
+    // Dispatch custom event
+    window.dispatchEvent(new CustomEvent('panel:closed'));
+
+    // Clear content after animation completes
+    setTimeout(() => {
+      if (!this.isOpen) {
+        this.panel.innerHTML = '';
+      }
+    }, 300);
+  }
+
+  /**
+   * Find a project by its ID
+   * @param {string} projectId - The ID of the project to find
+   * @returns {object|null} - The project object or null if not found
+   */
+  findProject(projectId) {
+    if (!this.projectData || !this.projectData.features) {
+      console.error('Project data not loaded');
+      return null;
+    }
+
+    return this.projectData.features.find(
+      feature => feature.properties.id === projectId
+    );
+  }
+
+  /**
+   * Populate the panel with project information
+   * @param {object} project - The project object to display
+   */
+  populatePanel(project) {
+    const props = project.properties;
+
+    // Format the budget as currency
+    const formattedBudget = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    }).format(props.budget);
+
+    // Format type and status classes for CSS
+    const typeClass = `type-${props.type.toLowerCase()}`;
+    const statusClass = `status-${props.status.toLowerCase().replace(/\s+/g, '-')}`;
+
+    // Create the HTML content
+    const html = `
       <div class="details-header" style="background-image: url('${props.imageUrl || 'assets/images/placeholder.jpg'}')">
         <button class="details-close" aria-label="Close panel">&times;</button>
         <div class="details-header-content">
@@ -254,23 +254,23 @@ class DetailsPanel {
       </div>
     `;
 
-        // Set the HTML to the panel
-        this.panel.innerHTML = html;
+    // Set the HTML to the panel
+    this.panel.innerHTML = html;
+  }
+
+  /**
+   * Generate HTML for project highlights if available
+   * @param {Array} highlights - Array of highlight strings
+   * @returns {string} - HTML for highlights section
+   */
+  generateHighlightsHTML(highlights) {
+    if (!highlights || !highlights.length) {
+      return '';
     }
 
-    /**
-     * Generate HTML for project highlights if available
-     * @param {Array} highlights - Array of highlight strings
-     * @returns {string} - HTML for highlights section
-     */
-    generateHighlightsHTML(highlights) {
-        if (!highlights || !highlights.length) {
-            return '';
-        }
+    const highlightsItems = highlights.map(item => `<li>${item}</li>`).join('');
 
-        const highlightsItems = highlights.map(item => `<li>${item}</li>`).join('');
-
-        return `
+    return `
       <div class="details-section">
         <h3>Highlights</h3>
         <ul class="details-highlights">
@@ -278,125 +278,116 @@ class DetailsPanel {
         </ul>
       </div>
     `;
-    }
+  }
 
-    /**
-     * Generate HTML for the image gallery
-     * @param {object} props - Project properties
-     * @returns {string} - HTML for gallery section
-     */
-    generateGalleryHTML(props) {
-        // In a real app, you would have multiple images
-        // For now, we'll use the main image and placeholders
-        return `
+  /**
+   * Generate HTML for the image gallery
+   * @param {object} props - Project properties
+   * @returns {string} - HTML for gallery section
+   */
+  generateGalleryHTML(props) {
+    // In a real app, you would have multiple images
+    // For now, we'll use the main image and placeholders
+    return `
       <div class="details-section">
         <h3>Gallery</h3>
         <div class="details-gallery">
           <div class="gallery-item">
             <img src="${props.imageUrl || 'assets/images/placeholder.jpg'}" alt="${props.name}">
           </div>
-          <div class="gallery-item">
-            <img src="assets/images/placeholder.jpg" alt="Project view">
-          </div>
-          <div class="gallery-item">
-            <img src="assets/images/placeholder.jpg" alt="Project view">
-          </div>
-          <div class="gallery-item">
-            <img src="assets/images/placeholder.jpg" alt="Project view">
-          </div>
         </div>
       </div>
     `;
+  }
+
+  /**
+   * Share the current project
+   */
+  shareProject() {
+    if (!this.currentProject) return;
+
+    const projectId = this.currentProject.properties.id;
+    const shareUrl = `${window.location.origin}${window.location.pathname}?project=${projectId}`;
+    const projectName = this.currentProject.properties.name;
+
+    // Use Web Share API if available
+    if (navigator.share) {
+      navigator.share({
+        title: projectName,
+        text: `Check out this project: ${projectName}`,
+        url: shareUrl
+      }).catch(error => {
+        console.log('Error sharing:', error);
+        this.fallbackShare(shareUrl);
+      });
+    } else {
+      this.fallbackShare(shareUrl);
     }
+  }
 
-    /**
-     * Share the current project
-     */
-    shareProject() {
-        if (!this.currentProject) return;
+  /**
+   * Fallback share method when Web Share API is not available
+   * @param {string} url - The URL to share
+   */
+  fallbackShare(url) {
+    // Copy to clipboard
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        showToast('Link copied to clipboard!');
+      })
+      .catch(() => {
+        // If clipboard API fails, show modal with URL
+        const input = document.createElement('input');
+        input.value = url;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        showToast('Link copied to clipboard!');
+      });
+  }
 
-        const projectId = this.currentProject.properties.id;
-        const shareUrl = `${window.location.origin}${window.location.pathname}?project=${projectId}`;
-        const projectName = this.currentProject.properties.name;
+  /**
+   * Locate the current project on the map
+   */
+  locateOnMap() {
+    if (!this.currentProject || !this.map) return;
 
-        // Use Web Share API if available
-        if (navigator.share) {
-            navigator.share({
-                title: projectName,
-                text: `Check out this project: ${projectName}`,
-                url: shareUrl
-            }).catch(error => {
-                console.log('Error sharing:', error);
-                this.fallbackShare(shareUrl);
-            });
-        } else {
-            this.fallbackShare(shareUrl);
-        }
-    }
+    // Close the panel
+    this.closePanel();
 
-    /**
-     * Fallback share method when Web Share API is not available
-     * @param {string} url - The URL to share
-     */
-    fallbackShare(url) {
-        // Copy to clipboard
-        navigator.clipboard.writeText(url)
-            .then(() => {
-                showToast('Link copied to clipboard!');
-            })
-            .catch(() => {
-                // If clipboard API fails, show modal with URL
-                const input = document.createElement('input');
-                input.value = url;
-                document.body.appendChild(input);
-                input.select();
-                document.execCommand('copy');
-                document.body.removeChild(input);
-                showToast('Link copied to clipboard!');
-            });
-    }
+    // Fly to location
+    setTimeout(() => {
+      this.map.flyTo({
+        center: this.currentProject.geometry.coordinates,
+        zoom: 15,
+        duration: 1000
+      });
 
-    /**
-     * Locate the current project on the map
-     */
-    locateOnMap() {
-        if (!this.currentProject || !this.map) return;
+      // Find and animate the marker
+      if (window.animateMarker) {
+        // This function would be defined in markers.js
+        // and would handle finding and animating the correct marker
+        window.animateMarker(this.currentProject.properties.id);
+      }
+    }, 300);
+  }
 
-        // Close the panel
-        this.closePanel();
+  /**
+   * Set the project data reference
+   * @param {object} data - The project data object
+   */
+  setProjectData(data) {
+    this.projectData = data;
+  }
 
-        // Fly to location
-        setTimeout(() => {
-            this.map.flyTo({
-                center: this.currentProject.geometry.coordinates,
-                zoom: 15,
-                duration: 1000
-            });
-
-            // Find and animate the marker
-            if (window.animateMarker) {
-                // This function would be defined in markers.js
-                // and would handle finding and animating the correct marker
-                window.animateMarker(this.currentProject.properties.id);
-            }
-        }, 300);
-    }
-
-    /**
-     * Set the project data reference
-     * @param {object} data - The project data object
-     */
-    setProjectData(data) {
-        this.projectData = data;
-    }
-
-    /**
-     * Set the map instance reference
-     * @param {object} mapInstance - The map instance
-     */
-    setMapInstance(mapInstance) {
-        this.map = mapInstance;
-    }
+  /**
+   * Set the map instance reference
+   * @param {object} mapInstance - The map instance
+   */
+  setMapInstance(mapInstance) {
+    this.map = mapInstance;
+  }
 }
 
 // Create a global instance of the details panel manager
@@ -408,21 +399,21 @@ let detailsPanel;
  * @param {object} mapInstance - The map instance
  */
 function initDetailsPanel(projectData, mapInstance) {
-    detailsPanel = new DetailsPanel('project-details-panel', projectData, mapInstance);
+  detailsPanel = new DetailsPanel('project-details-panel', projectData, mapInstance);
 
-    // Make it globally accessible for other scripts
-    window.detailsPanel = detailsPanel;
+  // Make it globally accessible for other scripts
+  window.detailsPanel = detailsPanel;
 
-    // Expose the showProjectDetails function
-    window.showProjectDetails = function (projectId, flyToMarker = false) {
-        detailsPanel.openPanel(projectId, flyToMarker);
-    };
+  // Expose the showProjectDetails function
+  window.showProjectDetails = function (projectId, flyToMarker = false) {
+    detailsPanel.openPanel(projectId, flyToMarker);
+  };
 }
 
 // Export the module if using modules
 if (typeof module !== 'undefined') {
-    module.exports = {
-        DetailsPanel,
-        initDetailsPanel
-    };
+  module.exports = {
+    DetailsPanel,
+    initDetailsPanel
+  };
 }
