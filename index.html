@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Project Showcase Map</title>
+
+    <!-- MapboxGL CSS -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.css"
+      rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="assets/css/main.css" rel="stylesheet">
+    <link href="assets/css/map.css" rel="stylesheet">
+    <link href="assets/css/sidebar.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="brand">
+          <h1>National Project </h1>
+        </div>
+        <div class="header-actions">
+          <button id="toggle-sidebar" class="btn-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+              viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round"><line x1="3" y1="12" x2="21"
+                y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line
+                x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="app-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="sidebar-header">
+            <h2>Filters</h2>
+            <button id="clear-filters" class="btn-text">Clear All</button>
+          </div>
+
+          <div class="sidebar-body">
+            <!-- Search -->
+            <div class="filter-section">
+              <label for="project-search">Search Projects</label>
+              <div class="search-container">
+                <input type="text" id="project-search"
+                  placeholder="Search by name or location...">
+                <button class="search-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round"><circle cx="11" cy="11"
+                      r="8"></circle><line x1="21" y1="21" x2="16.65"
+                      y2="16.65"></line></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Project Type Filter -->
+            <div class="filter-section">
+              <h3>Project Type</h3>
+              <div class="filter-group filter-type">
+                <div class="filter-item">
+                  <input type="checkbox" id="type-residential"
+                    value="Residential" checked>
+                  <label for="type-residential">Residential</label>
+                </div>
+                <div class="filter-item">
+                  <input type="checkbox" id="type-commercial" value="Commercial"
+                    checked>
+                  <label for="type-commercial">Commercial</label>
+                </div>
+                <div class="filter-item">
+                  <input type="checkbox" id="type-transportation"
+                    value="Transportation" checked>
+                  <label for="type-transportation">Transportation</label>
+                </div>
+                <div class="filter-item">
+                  <input type="checkbox" id="type-industrial" value="Industrial"
+                    checked>
+                  <label for="type-industrial">Industrial</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project Status Filter -->
+            <div class="filter-section">
+              <h3>Project Status</h3>
+              <div class="filter-group filter-status">
+                <div class="filter-item">
+                  <input type="checkbox" id="status-completed" value="Completed"
+                    checked>
+                  <label for="status-completed">Completed</label>
+                </div>
+                <div class="filter-item">
+                  <input type="checkbox" id="status-in-progress"
+                    value="In Progress" checked>
+                  <label for="status-in-progress">In Progress</label>
+                </div>
+                <div class="filter-item">
+                  <input type="checkbox" id="status-planned" value="Planned"
+                    checked>
+                  <label for="status-planned">Planned</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Year Range Filter -->
+            <div class="filter-section">
+              <h3>Year Range</h3>
+              <div class="filter-slider">
+                <div class="range-labels">
+                  <span>2020</span>
+                  <span id="year-value">2025</span>
+                  <span>2025</span>
+                </div>
+                <input type="range" id="year-range" min="2020" max="2025"
+                  step="1" value="2025" class="range-slider">
+              </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="filter-section stats-section">
+              <h3>Project Stats</h3>
+              <div class="stats-container">
+                <div class="stat-item">
+                  <div class="stat-value" id="project-count">25</div>
+                  <div class="stat-label">Visible Projects</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="filter-section legend-section">
+              <h3>Legend</h3>
+              <div class="legend-container">
+                <div class="legend-item">
+                  <span class="legend-swatch residential"></span>
+                  <span class="legend-label">Residential</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-swatch commercial"></span>
+                  <span class="legend-label">Commercial</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-swatch transportation"></span>
+                  <span class="legend-label">Transportation</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-swatch industrial"></span>
+                  <span class="legend-label">Industrial</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Map Container -->
+        <div id="map" class="map-container"></div>
+
+        <!-- Project Details Panel (hidden by default) -->
+        <div id="project-details-panel" class="details-panel">
+          <!-- Content populated dynamically -->
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <div class="footer-content">
+          <p>© 2025 Shem Muthanga | Project</p>
+          <div class="footer-links">
+            <a href="#" id="about-link">&#9432; About </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- About Modal (hidden by default) -->
+    <div id="about-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>About This Project</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>This National Project Showcase Map was developed as a
+            project to demonstrate GIS and web mapping skills. It
+            showcases various construction and development projects across the
+            United States.</p>
+          <p>The application is built using:</p>
+          <ul>
+            <li>Mapbox GL JS for interactive mapping</li>
+            <li>HTML5, CSS3, and vanilla JavaScript</li>
+            <li>Custom marker styling and animations</li>
+            <li>Advanced filtering capabilities</li>
+          </ul>
+          <p>All project data is fictional and created for demonstration
+            purposes only.</p>
+          <p>For more information or to hire me for your GIS development needs,
+            please contact me via my Upwork profile.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary close-modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MapboxGL JS -->
+    <script
+      src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
+
+    <!-- Additional Libraries -->
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+
+    <!-- Custom Scripts -->
+    <!-- Configuration must be loaded first -->
+    <script src="config.js"></script>
+
+    <!-- Then all other scripts -->
+    <script src="assets/js/markers.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/filters.js"></script>
+    <script src="assets/js/details-panel.js"></script>
+    <script src="assets/js/map.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
